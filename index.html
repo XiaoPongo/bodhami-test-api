@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bodhami API Tester</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #1e1e1e;
+      color: #dcdcdc;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #00ff90;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      margin-top: 0.2rem;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.7rem;
+      border: none;
+      background-color: #00ff90;
+      color: black;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00cc70;
+    }
+
+    #console {
+      background-color: #111;
+      border: 1px solid #444;
+      padding: 1rem;
+      min-height: 200px;
+      white-space: pre-wrap;
+      font-size: 14px;
+      overflow: auto;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bodhami API Tester</h1>
+
+  <form id="userForm">
+    <label for="name">Name:</label>
+    <input type="text" name="name" required />
+
+    <label for="email">Email:</label>
+    <input type="email" name="email" required />
+
+    <label for="age">Age:</label>
+    <input type="number" name="age" required />
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="console">// Console output will appear here</div>
+
+  <script>
+    const form = document.getElementById("userForm");
+    const consoleBox = document.getElementById("console");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const res = await fetch("http://localhost:8080/api/users", { // Change URL if deployed
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+
+        const output = await res.json();
+        consoleBox.textContent = JSON.stringify(output, null, 2);
+      } catch (err) {
+        consoleBox.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+
+</body>
+</html>
